@@ -1,0 +1,16 @@
+{
+  "name": "webpack-server-side-hmr",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+  },
+  "bin": {
+    "hmr-runner": "./hmr-runner.js"
+  },
+  "author": "Stefan Kleeschulte",
+  "license": "MIT",
+  "dependencies": {
+    "tree-kill": "^1.2.1"
+  }
+}
