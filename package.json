@@ -5,14 +5,12 @@
   "main": "index.js",
   "scripts": {},
   "bin": {
-    "nodemon-hmr": "./nodemon-hmr.js"
+    "hmr-runner": "./hmr-runner.js"
   },
   "author": "Stefan Kleeschulte",
   "license": "MIT",
   "dependencies": {
-    "findup-sync": "^3.0.0"
-  },
-  "devDependencies": {
-    "nodemon": "^1.18.10"
+    "findup-sync": "^3.0.0",
+    "tree-kill": "^1.2.1"
   }
 }
