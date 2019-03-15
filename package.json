@@ -1,14 +1,27 @@
 {
   "name": "webpack-server-side-hmr",
   "version": "0.1.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {},
+  "description": "Use IPC connection for server side HMR with Webpack.",
+  "keywords": [
+    "webpack",
+    "hmr",
+    "restart",
+    "server side",
+    "node",
+    "ipc"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Stefan Kleeschulte",
+    "url": "https://github.com/skleeschulte"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/skleeschulte/webpack-server-side-hmr.git"
+  },
   "bin": {
     "hmr-runner": "./hmr-runner.js"
   },
-  "author": "Stefan Kleeschulte",
-  "license": "MIT",
   "dependencies": {
     "findup-sync": "^3.0.0",
     "tree-kill": "^1.2.1"
