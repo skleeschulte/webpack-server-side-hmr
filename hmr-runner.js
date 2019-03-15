@@ -104,9 +104,10 @@ if (restartOnRs) {
 }
 
 // If running a node command and NODE_DEBUG_OPTION is present, inject it
-if (!ignoreDebugOptionEnv && process.env.NODE_DEBUG_OPTION) {
+if (!ignoreDebugOptionEnv && process.env.NODE_DEBUG_OPTION && process.env.NODE_DEBUG_OPTION.trim()) {
     if (path.basename(command, path.extname(command)) === 'node') {
-        if (commandArgs.indexOf(process.env.NODE_DEBUG_OPTION) === -1) {
+        if (commandArgs.filter(function(arg) { return /^--(inspect|debug)(-brk)?=/.test(arg); }).length === 0) {
+            console.debug('Adding debug option to command arguments: ' + process.env.NODE_DEBUG_OPTION);
             commandArgs.unshift(process.env.NODE_DEBUG_OPTION);
         }
     }
