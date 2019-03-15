@@ -124,18 +124,25 @@ client.connect();
 var child;
 var running = false;
 var restarting = false;
+var removeCurrentAssetsEmittedListener = null;
 
 /**
  * Run command with spawn child. When child exits with code != 0, wait for the signaling server to send a
  * webpack_assets_emitted event.
  */
 function spawnChild() {
+    if (removeCurrentAssetsEmittedListener) {
+        removeCurrentAssetsEmittedListener();
+        removeCurrentAssetsEmittedListener = null;
+    }
     if (running) {
-        log.debug('spawnChild: Child is already running.');
+        log('Child process start requested, but child is already running - ignoring request.');
         return;
     }
     running = true;
-    log('Running command: ' + command + ' ' + commandArgs.join(' '));
+    log('Starting child process: ' + command + ' ' + commandArgs.join(' '));
+    log.debug('Command: ' + command);
+    log.debug('Arguments: ' + JSON.stringify(commandArgs));
     child = spawn(command, commandArgs, { stdio: 'inherit' });
     child.on('exit', function(code, signal) {
         running = false;
@@ -149,11 +156,16 @@ function spawnChild() {
                 log('Child process finished with exit code \'' + code + '\'.');
             }
             if (!restarting) {
-                log('Waiting for \'webpack_assets_emitted\' event to restart child.');
-                client.events.once('webpack_assets_emitted', function() {
-                    log('Received \'webpack_assets_emitted\' event, restarting child.');
+                log('Waiting for \'webpack_assets_emitted\' event to restart child process.');
+                var listener = function() {
+                    log('Received \'webpack_assets_emitted\' event, restarting child process.');
                     restartChild();
-                });
+                };
+                client.events.once('webpack_assets_emitted', listener);
+                removeCurrentAssetsEmittedListener = function() {
+                    log('Stopping to listen for \'webpack_assets_emitted\' event.');
+                    client.events.removeListener('webpack_assets_emitted', listener);
+                }
             }
         }
     });
@@ -165,22 +177,26 @@ spawnChild();
  */
 function restartChild() {
     if (restarting) {
-        log.debug('Restart requested, but there is already a restart in progress - ignoring request.');
+        log('Restart requested, but there is already a restart in progress - ignoring request.');
         return;
     }
     restarting = true;
-    log.debug('Restarting child');
+    log.debug('Restarting child process.');
     if (running && child && child.pid) {
-        log.debug('Child is running (PID ' + child.pid + '), killing child');
+        log.debug('Child process is running (PID ' + child.pid + '), killing child process.');
         treeKill(child.pid, function(error) {
             if (error) {
                 log.warn('There was an error when trying to kill the child process.');
                 throw error;
             }
-            spawnChild();
+            // wait for exit event listeners to be called
+            process.nextTick(function() {
+                spawnChild();
+                restarting = false;
+            });
         });
     } else {
         spawnChild();
+        restarting = false;
     }
-    restarting = false;
 }
