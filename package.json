@@ -11,5 +11,8 @@
   "license": "MIT",
   "dependencies": {
     "findup-sync": "^3.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
   }
 }
