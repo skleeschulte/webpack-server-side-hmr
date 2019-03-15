@@ -101,6 +101,10 @@ if (nodemonExec) {
     }
 } else {
     nodemonExec = findup('node_modules/.bin/nodemon');
+    if (!nodemonExec) {
+        log.warn('Could not find nodemon. Install nodemon locally or use --nh-nodemon-exec argument.');
+        process.exit();
+    }
 }
 
 // run nodemon
