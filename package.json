@@ -3,14 +3,13 @@
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "bin": {
-    "hmr-runner": "./hmr-runner.js"
+    "nodemon-hmr": "./nodemon-hmr.js"
   },
   "author": "Stefan Kleeschulte",
   "license": "MIT",
   "dependencies": {
-    "tree-kill": "^1.2.1"
+    "findup-sync": "^3.0.0"
   }
 }
